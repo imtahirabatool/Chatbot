@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import SendIcon from '@mui/icons-material/Send';
+import PersonIcon from "@mui/icons-material/Person";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -44,24 +48,52 @@ export default function Chatbot() {
     }
   };
 
+  const handleNewChat = () => {
+    setMessages([]);
+    setInput("");
+  };
+
   return (
-    <div className="flex flex-col w-full max-w-lg p-5 bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="flex flex-col w-full max-w-lg p-5 bg-navy shadow-lg rounded-lg overflow-hidden mx-auto sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+      <div className="flex items-center justify-between p-2">
+        <button
+          onClick={handleNewChat}
+          className="flex items-center px-3 py-2 text-sm bg-blue-700 text-white rounded-lg hover:bg-gray-300"
+        >
+          <ChatBubbleOutlineIcon className="mr-2" />
+          New Chat
+        </button>
+      </div>
       <div className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg ${
-              msg.type === "user"
-                ? "bg-blue-100 text-blue-800 self-end"
-                : "bg-gray-100 text-gray-800"
+            className={`flex items-start ${
+              msg.type === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            {msg.text}
+            {msg.type === "user" ? (
+              <PersonIcon className="mr-2 text-blue-500" />
+            ) : (
+              <RecordVoiceOverIcon className="mr-2 text-gray-500" />
+            )}
+            <div
+              className={`p-2 rounded-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${
+                msg.type === "user"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-gray-100 text-gray-800"
+              }`}
+            >
+              {msg.text}
+            </div>
           </div>
         ))}
         {loading && (
-          <div className="p-2 rounded-lg bg-gray-200 text-gray-600 animate-pulse">
-            Thinking...
+          <div className="flex items-start justify-start">
+            <RecordVoiceOverIcon className="mr-2 text-gray-500" />
+            <div className="p-2 rounded-lg bg-gray-200 text-gray-600 animate-pulse">
+              Thinking...
+            </div>
           </div>
         )}
       </div>
@@ -76,9 +108,9 @@ export default function Chatbot() {
           />
           <button
             type="submit"
-            className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="ml-2 px-4 py-1 bg-blue-700 text-white rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Send
+            <SendIcon />
           </button>
         </form>
       </div>
