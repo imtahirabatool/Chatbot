@@ -31,3 +31,16 @@ body {
     text-wrap: balance;
   }
 }
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+main {
+background-image: url('https://media.tenor.com/TZaIBNauQfAAAAAM/stars-galaxy.gif');
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw; 
+}

@@ -12,7 +12,7 @@ export default function Home() {
       </Head>
 
       <main className="flex flex-col items-center justify-center min-h-screen py-2">
-        <h1 className="text-3xl font-bold mb-4">AI Chatbot</h1>
+        <h1 className="text-3xl font-bold mb-4 p-4">AI Chatbot</h1>
         <Chatbot />
       </main>
     </div>
