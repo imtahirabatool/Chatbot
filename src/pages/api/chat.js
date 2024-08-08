@@ -1,35 +1,39 @@
+import { GoogleGenerativeAI } from '@google/generative-ai'; 
+
+const API = process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(API);
+
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+async function generate(prompt, userQuery) {
+  try {
+    const fullQuery = `${prompt} ${userQuery}`;
+    const result = await model.generateContent(fullQuery);
+    const response = result.response;
+    const text = response.text();
+
+    return text;
+  } catch (error) {
+    console.error("Error generating content:", error);
+    throw error;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { message } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
+    if (!API) {
       return res.status(500).json({ error: "API key is missing" });
     }
 
     try {
-      console.log("Sending request to Gemini API with message:", message);
+      const prompt = `You are a friendly and efficient customer support assistant. Provide clear, accurate, and concise answers to users' questions or issues. Keep responses informative and limited to 1-2 lines`;
 
-      const response = await fetch("https://api.gemini.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({ prompt: message }),
-      });
-      console.log(apiKey);
+      const responseText = await generate(prompt, message);
 
-      console.log("Gemini API response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      res.status(200).json({ reply: data.response || "No response from API" });
+      res.status(200).json({ reply: responseText });
     } catch (error) {
-      console.error("Error:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   } else {
