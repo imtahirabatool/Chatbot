@@ -1,29 +1,10 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const API = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(API);
-
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-async function generate(prompt, userQuery) {
-  try {
-    const fullQuery = `${prompt} ${userQuery}`;
-    const result = await model.generateContent(fullQuery);
-    const response = result.response;
-    const text = response.text();
-
-    return text;
-  } catch (error) {
-    console.error("Error generating content:", error);
-    throw error;
-  }
-}
+import { generate } from '../../lib/rag';
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { message } = req.body;
 
-    if (!API) {
+    if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({ error: "API key is missing" });
     }
 
